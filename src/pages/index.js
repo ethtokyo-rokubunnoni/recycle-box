@@ -1,6 +1,7 @@
 import Head from 'next/head';
-import { Text } from '@chakra-ui/react';
+import { Stack, Text } from '@chakra-ui/react';
 import { Profile } from '@/componets/profile';
+import { Balances } from '@/componets/balance';
 
 export default function Home() {
 	return (
@@ -11,8 +12,11 @@ export default function Home() {
 				<meta name='viewport' content='width=device-width, initial-scale=1' />
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
-			{/* <Text>Hello World.</Text> */}
-			<Profile />
+			<Stack>
+				{/* <Text>Hello World.</Text> */}
+				<Profile />
+				<Balances />
+			</Stack>
 		</>
 	);
 }
