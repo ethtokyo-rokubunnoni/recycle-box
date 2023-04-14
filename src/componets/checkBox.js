@@ -1,8 +1,10 @@
-import { Box, Button, Checkbox, Flex, Stack } from '@chakra-ui/react';
-import { Alchemy, Network, Utils } from 'alchemy-sdk';
+import { useMulticall } from '@/helper/multicall';
+import { Button, Checkbox, Stack } from '@chakra-ui/react';
+import { Utils } from 'alchemy-sdk';
 import { useState } from 'react';
+// import { useConnect } from 'wagmi';
 
-export function CheckBox({ tokenList }) {
+export async function CheckBox({ tokenList }) {
 	const checked = [];
 	Object.keys(tokenList).map((keyname, i) => {
 		let n = tokenList[keyname].tokens.length;
@@ -10,6 +12,8 @@ export function CheckBox({ tokenList }) {
 	});
 
 	let recycleTokens = [];
+
+	// const { connector } = useConnect();
 
 	const recycle = () => {
 		Object.keys(tokenList).map((keyname, i) => {
@@ -19,7 +23,8 @@ export function CheckBox({ tokenList }) {
 				}
 			});
 		});
-		console.log(recycleTokens);
+		useMulticall(recycleTokens);
+		// console.log(recycleTokens);
 	};
 
 	return (
@@ -45,7 +50,6 @@ export function CheckBox({ tokenList }) {
 						</Checkbox>
 						<Stack pl={6} mt={1} spacing={1}>
 							{tokenList[keyname].tokens.map((e, j) => {
-								console.log(e);
 								return (
 									<Checkbox
 										key={e.symbol}

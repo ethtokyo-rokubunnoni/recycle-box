@@ -1,10 +1,9 @@
 import { Button, Stack } from '@chakra-ui/react';
-import { useAccount, useConnect, useDisconnect, useEnsName } from 'wagmi';
+import { useAccount, useConnect, useDisconnect } from 'wagmi';
 
 export function Profile() {
 	const { address, connector, isConnected } = useAccount();
 	// const { data: ensAvatar } = useEnsAvatar({ address });
-	const { data: ensName } = useEnsName({ address });
 	const { connect, connectors, error, isLoading, pendingConnector } = useConnect();
 	const { disconnect } = useDisconnect();
 
@@ -12,7 +11,7 @@ export function Profile() {
 		return (
 			<>
 				<div>
-					<div>{ensName ? `${ensName} (${address})` : address}</div>
+					<div>{address}</div>
 					<div>Connected to {connector.name}</div>
 					<Button onClick={disconnect}>Disconnect</Button>
 				</div>

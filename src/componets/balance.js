@@ -47,12 +47,6 @@ export function Balances() {
 			let _data = data.tokenBalances[i];
 			const tokenData = await alchemy.core.getTokenMetadata(_data.contractAddress);
 			_tokenData.push(tokenData);
-			// if (pooltokens.includes(tokenData.symbol)) {
-			// 	console.log('yay');
-			// 	// console.log(Utils.formatUnits(_data.tokenBalance, tokenData.decimals));
-			// 	pools.tokens.push({ tokenData, _data });
-			// }
-			// console.log(tokenData);
 		}
 
 		setTokenDataObjects(_tokenData);
@@ -68,31 +62,15 @@ export function Balances() {
 			{hasQueried ? (
 				<>
 					<Text>Balance : {balance} ETH</Text>
-					<SimpleGrid columns={4} spacing={24}>
-						{results.tokenBalances.map((e, i) => {
-							let x = { data: tokenDataObjects[i], balance: e };
-							if (pooltokens.includes(tokenDataObjects[i].symbol)) {
-								// console.log('yay');
-								// console.log(Utils.formatUnits(_data.tokenBalance, tokenData.decimals));
-								pools.tokens.push(x);
-							} else {
-								others.tokens.push(x);
-							}
-							y = { pools, others };
-							// return (
-							// 	<Flex flexDir={'column'} color='white' w={'20vw'} key={i}>
-							// 		<Box>
-							// 			<b>Symbol:</b> ${tokenDataObjects[i].symbol}&nbsp;
-							// 		</Box>
-							// 		<Box>
-							// 			<b>Balance:</b>&nbsp;
-							// 			{Utils.formatUnits(e.tokenBalance, tokenDataObjects[i].decimals)}
-							// 		</Box>
-							// 		<Image src={tokenDataObjects[i].logo} />
-							// 	</Flex>
-							// );
-						})}
-					</SimpleGrid>
+					{results.tokenBalances.map((e, i) => {
+						let x = { data: tokenDataObjects[i], balance: e };
+						if (pooltokens.includes(tokenDataObjects[i].symbol)) {
+							pools.tokens.push(x);
+						} else {
+							others.tokens.push(x);
+						}
+						y = { pools, others };
+					})}
 					<CheckBox tokenList={y} />
 				</>
 			) : (
