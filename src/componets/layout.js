@@ -4,7 +4,7 @@ export default function Layout({ children }) {
 	return (
 		<>
 			{/* <Navbar /> */}
-			<Flex w={'100vw'} px={'10vw'} py={'10vh'} justify={'center'}>
+			<Flex w={'100vw'} px={'10vw'} py={'10vh'} justifyContent={'center'}>
 				{children}
 			</Flex>
 			{/* <Footer /> */}

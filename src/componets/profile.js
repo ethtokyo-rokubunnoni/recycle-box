@@ -1,24 +1,41 @@
-import { useAccount, useConnect, useDisconnect } from 'wagmi';
-import { InjectedConnector } from 'wagmi/connectors/injected';
-import { Button, Text } from '@chakra-ui/react';
+import { Button, Stack } from '@chakra-ui/react';
+import { useAccount, useConnect, useDisconnect, useEnsName } from 'wagmi';
 
 export function Profile() {
-	const { address, isConnected } = useAccount();
-	const { connect } = useConnect({
-		connector: new InjectedConnector(),
-	});
+	const { address, connector, isConnected } = useAccount();
+	// const { data: ensAvatar } = useEnsAvatar({ address });
+	const { data: ensName } = useEnsName({ address });
+	const { connect, connectors, error, isLoading, pendingConnector } = useConnect();
 	const { disconnect } = useDisconnect();
 
-	if (isConnected)
+	if (isConnected) {
 		return (
 			<>
-				<Text>Connected to {address}</Text>
-				<Button onClick={() => disconnect()}>Disconnect</Button>
+				<div>
+					<div>{ensName ? `${ensName} (${address})` : address}</div>
+					<div>Connected to {connector.name}</div>
+					<Button onClick={disconnect}>Disconnect</Button>
+				</div>
 			</>
 		);
+	}
+
 	return (
-		<>
-			<Button onClick={() => connect()}>Connect Wallet</Button>;
-		</>
+		<div>
+			<Stack>
+				{connectors.map((connector) => (
+					<Button
+						disabled={!connector.ready}
+						key={connector.id}
+						onClick={() => connect({ connector })}
+					>
+						{connector.name}
+						{isLoading && connector.id === pendingConnector?.id && ' (connecting)'}
+					</Button>
+				))}
+			</Stack>
+
+			{error && <div>{error.message}</div>}
+		</div>
 	);
 }
