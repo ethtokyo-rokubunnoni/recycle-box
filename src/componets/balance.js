@@ -3,6 +3,7 @@ import { useAccount } from 'wagmi';
 import { useState } from 'react';
 import { Alchemy, Network, Utils } from 'alchemy-sdk';
 import { API_KEY } from '@/data/constants';
+import { CheckBox } from './checkBox';
 
 export function Balances() {
 	const { address, isConnected } = useAccount();
@@ -16,7 +17,10 @@ export function Balances() {
 		listName: 'POOLS',
 		tokens: [],
 	};
-
+	const others = {
+		listName: 'OTHERS',
+		tokens: [],
+	};
 	const showBalances = async () => {
 		const config = {
 			apiKey: API_KEY,
@@ -43,14 +47,13 @@ export function Balances() {
 			let _data = data.tokenBalances[i];
 			const tokenData = await alchemy.core.getTokenMetadata(_data.contractAddress);
 			_tokenData.push(tokenData);
-			if (pooltokens.includes(tokenData.symbol)) {
-				console.log('yay');
-				// console.log(Utils.formatUnits(_data.tokenBalance, tokenData.decimals));
-				pools.tokens.push({ tokenData, _data });
-			}
+			// if (pooltokens.includes(tokenData.symbol)) {
+			// 	console.log('yay');
+			// 	// console.log(Utils.formatUnits(_data.tokenBalance, tokenData.decimals));
+			// 	pools.tokens.push({ tokenData, _data });
+			// }
 			// console.log(tokenData);
 		}
-		console.log(pools);
 
 		setTokenDataObjects(_tokenData);
 		setHasQueried(true);
@@ -59,7 +62,7 @@ export function Balances() {
 	if (!isConnected) {
 		return <Text>Connect wallet to show balances</Text>;
 	}
-
+	let y;
 	return (
 		<>
 			{hasQueried ? (
@@ -67,20 +70,30 @@ export function Balances() {
 					<Text>Balance : {balance} ETH</Text>
 					<SimpleGrid columns={4} spacing={24}>
 						{results.tokenBalances.map((e, i) => {
-							return (
-								<Flex flexDir={'column'} color='white' w={'20vw'} key={i}>
-									<Box>
-										<b>Symbol:</b> ${tokenDataObjects[i].symbol}&nbsp;
-									</Box>
-									<Box>
-										<b>Balance:</b>&nbsp;
-										{Utils.formatUnits(e.tokenBalance, tokenDataObjects[i].decimals)}
-									</Box>
-									<Image src={tokenDataObjects[i].logo} />
-								</Flex>
-							);
+							let x = { data: tokenDataObjects[i], balance: e };
+							if (pooltokens.includes(tokenDataObjects[i].symbol)) {
+								// console.log('yay');
+								// console.log(Utils.formatUnits(_data.tokenBalance, tokenData.decimals));
+								pools.tokens.push(x);
+							} else {
+								others.tokens.push(x);
+							}
+							y = { pools, others };
+							// return (
+							// 	<Flex flexDir={'column'} color='white' w={'20vw'} key={i}>
+							// 		<Box>
+							// 			<b>Symbol:</b> ${tokenDataObjects[i].symbol}&nbsp;
+							// 		</Box>
+							// 		<Box>
+							// 			<b>Balance:</b>&nbsp;
+							// 			{Utils.formatUnits(e.tokenBalance, tokenDataObjects[i].decimals)}
+							// 		</Box>
+							// 		<Image src={tokenDataObjects[i].logo} />
+							// 	</Flex>
+							// );
 						})}
 					</SimpleGrid>
+					<CheckBox tokenList={y} />
 				</>
 			) : (
 				<>
