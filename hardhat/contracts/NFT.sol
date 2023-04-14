@@ -22,15 +22,19 @@ contract NFT is ERC1155, Ownable, ERC1155Burnable, ERC1155Supply {
     uint256 public constant V3 = 3;
     uint256 public constant V4 = 4;
 
+    //metadata updates
+    //To refresh token metadata on OpenSea, you can emit on-chain events as defined in EIP-4906:
+    event MetadataUpdate(uint256 _tokenId);
+
     constructor() ERC1155("") {
-        baseMetadataURIPrefix = "YOUR_METADATA_URI"; // ipfs base url, need to create ipfs before deploying
-        baseMetadataURISuffix = "YOUR_METADATA_URI_SUFFIX"; //".json", same as above
+        baseMetadataURIPrefix = "https://bafybeietrg6tfezrjg3ytswumcesyli7ymx6w4dsqihdrvsu2on7k5rdem.ipfs.nftstorage.link/"; // ipfs base url, need to create ipfs before deploying
+        baseMetadataURISuffix = ".json"; //".json", same as above
     }
 
     //function to change URI
     //update the URI
     function setBaseURI(string memory newuri) public onlyOwner {
-        _setURI(newuri);
+        baseMetadataURIPrefix = newuri;
     }
 
     //for OpenSea

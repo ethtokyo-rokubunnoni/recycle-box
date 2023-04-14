@@ -3,7 +3,7 @@ require('@nomicfoundation/hardhat-toolbox');
 /** @type import('hardhat/config').HardhatUserConfig */
 
 module.exports = {
-	defaultNetwork: 'sepolia',
+	defaultNetwork: 'hardhat',
 	networks: {
 		hardhat: {},
 		sepolia: {
