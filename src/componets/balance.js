@@ -11,7 +11,11 @@ export function Balances() {
 	const [tokenDataObjects, setTokenDataObjects] = useState([]);
 	const [balance, setBalance] = useState('0');
 
-	const tokens = ['LINK'];
+	const pooltokens = ['LINK'];
+	const pools = {
+		listName: 'POOLS',
+		tokens: [],
+	};
 
 	const showBalances = async () => {
 		const config = {
@@ -32,23 +36,23 @@ export function Balances() {
 		const data = await alchemy.core.getTokenBalances(address);
 
 		setResults(data);
-		// console.log(data.tokenBalances);
-		data.tokenBalances.map((e, i) => {
-			// console.log(e);
-		});
 
-		// const tokenDataPromises = [];
+		let _tokenData = [];
 
 		for (let i = 0; i < data.tokenBalances.length; i++) {
-			const tokenData = await alchemy.core.getTokenMetadata(data.tokenBalances[i].contractAddress);
-			tokenDataObjects.push(tokenData);
-			if (tokens.includes(tokenData.symbol)) {
+			let _data = data.tokenBalances[i];
+			const tokenData = await alchemy.core.getTokenMetadata(_data.contractAddress);
+			_tokenData.push(tokenData);
+			if (pooltokens.includes(tokenData.symbol)) {
 				console.log('yay');
+				// console.log(Utils.formatUnits(_data.tokenBalance, tokenData.decimals));
+				pools.tokens.push({ tokenData, _data });
 			}
 			// console.log(tokenData);
 		}
+		console.log(pools);
 
-		// setTokenDataObjects(await Promise.all(tokenDataPromises));
+		setTokenDataObjects(_tokenData);
 		setHasQueried(true);
 	};
 
