@@ -1,18 +1,19 @@
-import { Box, Button, Flex, Image, SimpleGrid, Text } from '@chakra-ui/react';
+import { Text } from '@chakra-ui/react';
 import { useAccount } from 'wagmi';
 import { useState } from 'react';
 import { Alchemy, Network, Utils } from 'alchemy-sdk';
 import { API_KEY } from '@/data/constants';
 import { CheckBox } from './checkBox';
+import { useEffect } from 'react';
 
-export function Balances() {
-	const { address, isConnected } = useAccount();
+export function Balances({ isConnected, onCheckedTokensChange }) {
+	const { address } = useAccount();
 	const [results, setResults] = useState([]);
 	const [hasQueried, setHasQueried] = useState(false);
 	const [tokenDataObjects, setTokenDataObjects] = useState([]);
 	const [balance, setBalance] = useState('0');
 
-	const pooltokens = ['LINK'];
+	const pooltokens = ['LINK', 'ETH', 'MATIC'];
 	const pools = {
 		listName: 'POOLS',
 		tokens: [],
@@ -52,16 +53,23 @@ export function Balances() {
 		setTokenDataObjects(_tokenData);
 		setHasQueried(true);
 	};
-
-	if (!isConnected) {
-		return <Text>Connect wallet to show balances</Text>;
-	}
 	let y;
+
+	useEffect(() => {
+		if (isConnected) {
+			showBalances();
+		} else {
+			setHasQueried(false);
+		}
+	}, [isConnected]);
+
 	return (
 		<>
 			{hasQueried ? (
 				<>
-					<Text>Balance : {balance} ETH</Text>
+					<Text fontSize='24px' fontWeight='bold' mb={4}>
+						Balance : {balance} MATIC
+					</Text>
 					{results.tokenBalances.map((e, i) => {
 						let x = { data: tokenDataObjects[i], balance: e };
 						if (pooltokens.includes(tokenDataObjects[i].symbol)) {
@@ -71,12 +79,10 @@ export function Balances() {
 						}
 						y = { pools, others };
 					})}
-					<CheckBox tokenList={y} />
+					<CheckBox tokenList={y} onCheckedTokensChange={onCheckedTokensChange} />
 				</>
 			) : (
-				<>
-					<Button onClick={showBalances}>Show balances</Button>
-				</>
+				<Text>Connect wallet to show Token Balances</Text>
 			)}
 		</>
 	);

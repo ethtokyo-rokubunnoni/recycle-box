@@ -1,24 +1,18 @@
-import { Flex, Spacer, Button, Image, Box } from '@chakra-ui/react';
+import { Flex, Spacer, Button, Image } from '@chakra-ui/react';
 
 import Link from 'next/link';
 import { Profile } from '@/componets/profile';
 
 const Navbar = () => {
 	return (
-		<Flex as='nav' align='center' justify='space-between' padding='1rem'>
+		<Flex as='nav' align='center' justify='space-between' padding='1.8rem'>
 			<Link href='/'>
-				<Image src='/assets/logo.png' alt='Logo' boxSize='40px' />
+				<Image src='/assets/logo.png' alt='Logo' boxSize='60px' />
 			</Link>
 			<Spacer />
-			{/*<Link href="/">
-        <Button variant="ghost">Home</Button>
-      </Link>
-      <Link href="/about">
-        <Button variant="ghost">About</Button>
-      </Link>
-      <Link href="/contact">
-        <Button variant="ghost">Contact</Button>
-      </Link>*/}
+	      	<Link href="/docs">
+        		<Button variant="ghost" minW="100px">Docs</Button>
+      		</Link>
 			<Profile />
 		</Flex>
 	);

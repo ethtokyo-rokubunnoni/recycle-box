@@ -1,5 +1,6 @@
-import { Button, Stack, Flex, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
+import { Button, Stack, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
 import { useAccount, useConnect, useDisconnect, useEnsName } from 'wagmi';
+import { useEffect } from 'react';
 
 function truncateAddress(address, startLength = 6, endLength = 4) {
 	return `${address.slice(0, startLength)}...${address.slice(-endLength)}`;
@@ -23,6 +24,13 @@ export function Profile() {
 			connect({ connector: connectors[0] }); // Assuming MetaMask is the first connector in the list
 		}
 	};
+
+	useEffect(() => {
+		if (!isConnected && setHasQueried) {
+			// Reset the state in the Balances component
+			setHasQueried(false);
+		}
+	}, [isConnected, setHasQueried]);
 
 	if (isConnected) {
 		return (
