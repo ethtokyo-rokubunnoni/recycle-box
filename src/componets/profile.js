@@ -6,7 +6,7 @@ function truncateAddress(address, startLength = 6, endLength = 4) {
 	return `${address.slice(0, startLength)}...${address.slice(-endLength)}`;
 }
 
-export function Profile() {
+export function Profile({ setHasQueried }) {
 	const { address, connector, isConnected } = useAccount();
 	// const { data: ensName } = useEnsName({ address });
 	const { connect, connectors, error, isLoading, pendingConnector } = useConnect();

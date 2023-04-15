@@ -5,11 +5,17 @@ import Footer from './footer';
 export default function Layout({ children }) {
 	return (
 		<>
-			{ <Navbar /> }
-			<Flex w={'100vw'} px={'10vw'} py={'10vh'} justifyContent={'space-between'} alignItems={'center'}>
+			<Navbar />
+			<Flex
+				w={'100vw'}
+				h={'80vh'}
+				justifyContent={'space-between'}
+				alignItems={'center'}
+				py={'10vh'}
+			>
 				{children}
 			</Flex>
-			{ <Footer /> }
+			{/* <Footer /> */}
 		</>
 	);
 }

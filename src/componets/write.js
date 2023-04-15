@@ -1,4 +1,5 @@
 import { Button } from '@chakra-ui/react';
+import { useEffect } from 'react';
 import { useContractWrite, usePrepareContractWrite } from 'wagmi';
 
 export const Write = ({ tx }) => {
@@ -14,6 +15,7 @@ export const Write = ({ tx }) => {
 	return (
 		<div>
 			<Button onClick={() => write?.()}>{tx.method}</Button>
+			{status}
 			{isLoading && <div>Check Wallet</div>}
 			{isSuccess && <div>Transaction: {JSON.stringify(data)}</div>}
 		</div>
