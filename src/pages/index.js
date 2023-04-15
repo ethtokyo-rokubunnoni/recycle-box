@@ -1,32 +1,25 @@
 import Head from 'next/head';
-import React, { useReducer, useState } from 'react';
+import React from 'react';
 import {
-	TitleBar,
-	UserInfo,
 	Flex,
 	Box,
 	Grid,
 	Stack,
 	Heading,
-	Text,
 	Image,
 	useColorModeValue,
-	useMediaQuery
+	useMediaQuery,
 } from '@chakra-ui/react';
+import { useAccount } from 'wagmi';
 
-import { Profile } from '@/componets/profile';
 import { Balances } from '@/componets/balance';
 
 export default function Home() {
+	const { isConnected } = useAccount();
+
 	const [isLargerThan480] = useMediaQuery('(max-width: 481px)');
 	const [isLargerThan768] = useMediaQuery('(min-width: 769px)');
-	const imageSize = isLargerThan768
-		? '60%'
-		: isLargerThan480
-		? '40%'
-		: '20%';
-
-	const [hasQueried, setHasQueried] = useState(false);
+	const imageSize = isLargerThan768 ? '60%' : isLargerThan480 ? '40%' : '20%';
 
 	return (
 		<>
@@ -49,11 +42,10 @@ export default function Home() {
 						<Stack spacing={8} w={['90vh', 450, 550]} py={12} px={6} align={'center'}>
 							<Stack pt={50} align={'center'}>
 								<Heading fontSize={'4xl'}>Clean out your wallet!</Heading>
-									<Image src='/assets/mottainai.png' alt='Logo' boxSize={imageSize} />
-								<Text fontSize={'lg'} color={useColorModeValue('gray.500', 'gray.600')}>
-									<Balances setHasQueried={setHasQueried} />
-									{/*{hasQueried && <Balances />}*/}
-								</Text>
+								<Image src='/assets/mottainai.png' alt='Logo' boxSize={imageSize} />
+								<Box fontSize={'lg'} color={useColorModeValue('gray.500', 'gray.600')}>
+									<Balances isConnected={isConnected} />
+								</Box>
 							</Stack>
 						</Stack>
 					</Grid>
