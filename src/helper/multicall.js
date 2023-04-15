@@ -2,7 +2,7 @@ import { Multicall } from 'ethereum-multicall';
 import { Utils } from 'alchemy-sdk';
 // import getDefaultProvider from 'ethers';
 
-export const useMulticall = async (tokens) => {
+export const multicall = (tokens) => {
 	// const provider = await getDefaultProvider();
 
 	// const multicall = new Multicall({ ethersProvider: provider, tryAggregate: true });

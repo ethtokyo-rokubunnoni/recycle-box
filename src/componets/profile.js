@@ -7,14 +7,15 @@ function truncateAddress(address, startLength = 6, endLength = 4) {
 
 export function Profile() {
 	const { address, connector, isConnected } = useAccount();
-	const { data: ensName } = useEnsName({ address });
+	// const { data: ensName } = useEnsName({ address });
 	const { connect, connectors, error, isLoading, pendingConnector } = useConnect();
 	const { disconnect } = useDisconnect();
 
 	const buttonText = isConnected
-		? ensName
-			? `${truncateAddress(ensName)} (${truncateAddress(address)})`
-			: truncateAddress(address)
+		? // ensName
+		  // 	? `${truncateAddress(ensName)} (${truncateAddress(address)})`
+		  // 	:
+		  truncateAddress(address)
 		: 'Wallet Connect';
 
 	const handleConnectClick = () => {

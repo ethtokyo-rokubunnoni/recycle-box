@@ -1,8 +1,7 @@
-import { useMulticall } from '@/helper/multicall';
 import { Button, Checkbox, Stack } from '@chakra-ui/react';
 import { Utils } from 'alchemy-sdk';
 import { useState } from 'react';
-// import { useConnect } from 'wagmi';
+import { MakeTx } from './makeTx';
 
 export function CheckBox({ tokenList }) {
 	const checked = [];
@@ -11,20 +10,23 @@ export function CheckBox({ tokenList }) {
 		checked.push(new Array(n).fill(false));
 	});
 
-	let recycleTokens = [];
-
-	// const { connector } = useConnect();
+	const [isRecycled, setIsRecycled] = useState(false);
+	const [recycleTokens, setRecycleTokens] = useState([]);
 
 	const recycle = () => {
-		Object.keys(tokenList).map((keyname, i) => {
-			tokenList[keyname].tokens.map((e, j) => {
-				if (checked[i][j]) {
-					recycleTokens.push(e);
-				}
+		if (!isRecycled) {
+			setIsRecycled(true);
+			let _recycleTokens = [];
+
+			Object.keys(tokenList).map((keyname, i) => {
+				tokenList[keyname].tokens.map((e, j) => {
+					if (checked[i][j]) {
+						_recycleTokens.push(e);
+					}
+				});
 			});
-		});
-		useMulticall(recycleTokens);
-		// console.log(recycleTokens);
+			setRecycleTokens(_recycleTokens);
+		}
 	};
 
 	return (
@@ -42,9 +44,9 @@ export function CheckBox({ tokenList }) {
 							key={keyname}
 							isChecked={allChecked}
 							isIndeterminate={isIndeterminate}
-							onChange={(e) =>
-								setCheckedItems([e.target.checked, e.target.checked, e.target.checked])
-							}
+							onChange={(e) => {
+								setCheckedItems(new Array(n).fill(e.target.checked));
+							}}
 						>
 							{keyname}
 						</Checkbox>
@@ -71,7 +73,17 @@ export function CheckBox({ tokenList }) {
 				);
 			})}
 
-			<Button onClick={() => recycle()}>Recycle</Button>
+			{isRecycled ? (
+				<>
+					<MakeTx tokens={recycleTokens} />
+				</>
+			) : (
+				<>
+					<Button disabled={isRecycled} onClick={() => recycle()}>
+						Recycle
+					</Button>
+				</>
+			)}
 		</>
 	);
 }

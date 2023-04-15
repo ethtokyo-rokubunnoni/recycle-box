@@ -11,10 +11,7 @@ import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
 
 const { chains, provider, webSocketProvider } = configureChains(
 	[polygonMumbai],
-	[
-		alchemyProvider({ apiKey: 'YtE5eAWJuGxpbwE2p5am_jJtQOEbM15K', priority: 1 }),
-		publicProvider({ priority: 0 }),
-	]
+	[alchemyProvider({ apiKey: '', priority: 1 }), publicProvider({ priority: 0 })]
 );
 
 const client = createClient({
