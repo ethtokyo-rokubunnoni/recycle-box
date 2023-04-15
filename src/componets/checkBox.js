@@ -1,4 +1,4 @@
-import { Button, Checkbox, Stack, Box, Text, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter } from '@chakra-ui/react';
+import { Button, Checkbox, Stack, Box, Text, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Spinner } from '@chakra-ui/react';
 import { Utils } from 'alchemy-sdk';
 import { useState } from 'react';
 
@@ -82,11 +82,20 @@ export function CheckBox({ tokenList }) {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent position="absolute" top="200px">
-          <ModalHeader>Recycle</ModalHeader>
+		  <Box align="center">
+          <ModalHeader>Recycling Now</ModalHeader>
           <ModalCloseButton />
+		  <Spinner 
+			 thickness='4px'
+			 speed='0.65s'
+			 emptyColor='gray.200'
+			 color='blue.500'
+			 size='xl'
+			 />
           <ModalBody>
-            <Text>I am recycling wait for a second... </Text>
+            <Text>Wait for a second... </Text>
           </ModalBody>
+		  </Box>
           <ModalFooter>
             <Button colorScheme="blue" mr={3} onClick={onClose}>
               Close
