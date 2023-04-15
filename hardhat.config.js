@@ -1,5 +1,4 @@
 require('@nomicfoundation/hardhat-toolbox');
-require("@nomiclabs/hardhat-waffle");
 require('@openzeppelin/hardhat-upgrades');
 
 /** @type import('hardhat/config').HardhatUserConfig */
@@ -8,7 +7,7 @@ module.exports = {
 	defaultNetwork: 'hardhat',
 	networks: {
 		hardhat: {
-			chainId:1337
+			chainId: 1337,
 		},
 		sepolia: {
 			url: 'https://eth-sepolia.g.alchemy.com/v2/<key>',
@@ -17,7 +16,7 @@ module.exports = {
 		mumbai: {
 			url: 'https://polygon-mumbai.g.alchemy.com/v2/<key>',
 			// accounts: [privateKey1, privateKey2, ...]
-		}
+		},
 	},
 	solidity: {
 		version: '0.8.9',
@@ -33,8 +32,5 @@ module.exports = {
 		tests: './hardhat/test',
 		cache: './hardhat/cache',
 		artifacts: './src/artifacts',
-	},
-	mocha: {
-		timeout: 40000,
 	},
 };
