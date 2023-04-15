@@ -1,18 +1,19 @@
-import { Box, Button, Flex, Image, SimpleGrid, Text } from '@chakra-ui/react';
+import { Text } from '@chakra-ui/react';
 import { useAccount } from 'wagmi';
 import { useState } from 'react';
 import { Alchemy, Network, Utils } from 'alchemy-sdk';
 import { API_KEY } from '@/data/constants';
 import { CheckBox } from './checkBox';
+import { useEffect } from 'react';
 
-export function Balances() {
-	const { address, isConnected } = useAccount();
+export function Balances({ isConnected, onCheckedTokensChange }) {
+	const { address } = useAccount();
 	const [results, setResults] = useState([]);
 	const [hasQueried, setHasQueried] = useState(false);
 	const [tokenDataObjects, setTokenDataObjects] = useState([]);
 	const [balance, setBalance] = useState('0');
 
-	const pooltokens = ['LINK'];
+	const pooltokens = ['LINK', 'ETH', 'MATIC'];
 	const pools = {
 		listName: 'POOLS',
 		tokens: [],
@@ -47,58 +48,41 @@ export function Balances() {
 			let _data = data.tokenBalances[i];
 			const tokenData = await alchemy.core.getTokenMetadata(_data.contractAddress);
 			_tokenData.push(tokenData);
-			// if (pooltokens.includes(tokenData.symbol)) {
-			// 	console.log('yay');
-			// 	// console.log(Utils.formatUnits(_data.tokenBalance, tokenData.decimals));
-			// 	pools.tokens.push({ tokenData, _data });
-			// }
-			// console.log(tokenData);
 		}
 
 		setTokenDataObjects(_tokenData);
 		setHasQueried(true);
 	};
-
-	if (!isConnected) {
-		return <Text>Connect wallet to show balances</Text>;
-	}
 	let y;
+
+	useEffect(() => {
+		if (isConnected) {
+			showBalances();
+		} else {
+			setHasQueried(false);
+		}
+	}, [isConnected]);
+
 	return (
 		<>
 			{hasQueried ? (
 				<>
-					<Text>Balance : {balance} ETH</Text>
-					<SimpleGrid columns={4} spacing={24}>
-						{results.tokenBalances.map((e, i) => {
-							let x = { data: tokenDataObjects[i], balance: e };
-							if (pooltokens.includes(tokenDataObjects[i].symbol)) {
-								// console.log('yay');
-								// console.log(Utils.formatUnits(_data.tokenBalance, tokenData.decimals));
-								pools.tokens.push(x);
-							} else {
-								others.tokens.push(x);
-							}
-							y = { pools, others };
-							// return (
-							// 	<Flex flexDir={'column'} color='white' w={'20vw'} key={i}>
-							// 		<Box>
-							// 			<b>Symbol:</b> ${tokenDataObjects[i].symbol}&nbsp;
-							// 		</Box>
-							// 		<Box>
-							// 			<b>Balance:</b>&nbsp;
-							// 			{Utils.formatUnits(e.tokenBalance, tokenDataObjects[i].decimals)}
-							// 		</Box>
-							// 		<Image src={tokenDataObjects[i].logo} />
-							// 	</Flex>
-							// );
-						})}
-					</SimpleGrid>
-					<CheckBox tokenList={y} />
+					<Text fontSize='24px' fontWeight='bold' mb={4}>
+						Balance : {balance} MATIC
+					</Text>
+					{results.tokenBalances.map((e, i) => {
+						let x = { data: tokenDataObjects[i], balance: e };
+						if (pooltokens.includes(tokenDataObjects[i].symbol)) {
+							pools.tokens.push(x);
+						} else {
+							others.tokens.push(x);
+						}
+						y = { pools, others };
+					})}
+					<CheckBox tokenList={y} onCheckedTokensChange={onCheckedTokensChange} />
 				</>
 			) : (
-				<>
-					<Button onClick={showBalances}>Show balances</Button>
-				</>
+				<Text>Connect wallet to show Token Balances</Text>
 			)}
 		</>
 	);
