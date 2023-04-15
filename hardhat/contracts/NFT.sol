@@ -22,16 +22,21 @@ contract NFT is ERC1155, Ownable, ERC1155Burnable, ERC1155Supply {
     //metadata updates
     //To refresh token metadata on OpenSea, you can emit on-chain events as defined in EIP-4906:
     event MetadataUpdate(uint256 _tokenId);
+    event URIInitialized (string metadataPrefix, string metadataSuffix);
+    event PrefixUpdated (string updatedPrefix);
+    event NftMinted (address reciever, uint256 collectionID, uint256 numberRecieved);
 
     constructor() ERC1155("") {
         baseMetadataURIPrefix = "https://bafybeidoftie6hxk3tpgndkb2nqemc57folfff5bsfp6hepdgfpaehk4x4.ipfs.dweb.link/"; // ipfs base url, need to create ipfs before deploying
         baseMetadataURISuffix = ".json"; //".json", same as above
+        emit(baseMetadataURIPrefix, baseMetadataURISuffix);
     }
 
     //function to change URI
     //update the URI
     function setBaseURI(string memory newuri) public onlyOwner {
         baseMetadataURIPrefix = newuri;
+        emit PrefixUpdated(newuri);
     }
 
     //for OpenSea
@@ -52,6 +57,7 @@ contract NFT is ERC1155, Ownable, ERC1155Burnable, ERC1155Supply {
         uint256 collectionId = _rank();
         _mint(to, collectionId, 1, "");
         _addTokenToAllTokensEnumeration(collectionId);
+        emit NftMinted (to, collectionId, 1);
     }
 
     function totalSupply() public view returns (uint256) {

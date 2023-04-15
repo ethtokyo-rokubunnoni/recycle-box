@@ -8,26 +8,23 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 contract MasterPool is OwnableUpgradeable, ReentrancyGuard {
 
     address public deployer;
-
-    //Will be used to show the token balance later on.
     address[] public depositedTokens;
 
     // Mapping from token address to the total deposit amount for that token.
     mapping(address => uint256) public totalDeposits;
-
-    // Mapping from token address to a boolean indicating if the token has been deposited.
     mapping(address => bool) public isTokenDeposited;
 
     // Mapping from user address to token address to the deposit amount for that user and token.
     mapping(address => mapping(address => uint256)) public userDeposits;
 
-    event Deposit(address indexed user, address indexed token, uint256 amount);
+    event DepositComplete(address indexed user, address indexed token, uint256 amount);
     event Withdrawal(address indexed user, address indexed token, uint256 amount);
+    event Initialized (address deployer);
 
-    //Can be called with deployment script or manually be called once.
     function initialize(address _deployer) public initializer {
         __Ownable_init();
         deployer = _deployer;
+        emit initialized (_deployer);
     }
 
     function deposit(address token, uint256 amount) public nonReentrant  returns (bool){
@@ -43,7 +40,7 @@ contract MasterPool is OwnableUpgradeable, ReentrancyGuard {
             isTokenDeposited[token] = true;
         }
 
-        emit Deposit(msg.sender, token, amount);
+        emit DepositComplete(msg.sender, token, amount);
         return true;
     }
 

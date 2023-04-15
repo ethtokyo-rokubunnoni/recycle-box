@@ -15,11 +15,13 @@ contract SingleTokenPool is OwnableUpgradeable, ReentrancyGuard {
 
     event Deposit(address indexed user, uint256 amount);
     event Withdrawal(address indexed user, uint256 amount);
+    event Initialized (address deployer, address token);
 
     function initialize(address _deployer, address _token) public initializer {
         __Ownable_init();
         deployer = _deployer;
         token = IERC20(_token);
+        emit Initialized(_deployer, _token);
     }
 
     function deposit(address tokenAddress, uint256 amount) public nonReentrant {
