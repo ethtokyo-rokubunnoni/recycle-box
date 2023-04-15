@@ -16,12 +16,14 @@
 		"@openzeppelin/contracts": "^4.8.3",
 		"@openzeppelin/contracts-upgradeable": "^4.8.3",
 		"@uniswap/v3-core": "^1.0.1",
+		"alchemy-sdk": "^2.8.0",
 		"eslint": "8.38.0",
 		"eslint-config-next": "13.3.0",
 		"framer-motion": "^10.11.6",
 		"next": "13.3.0",
 		"react": "18.2.0",
 		"react-dom": "18.2.0",
+		"react-jazzicon": "^1.0.4",
 		"wagmi": "^0.12.10"
 	},
 	"devDependencies": {
