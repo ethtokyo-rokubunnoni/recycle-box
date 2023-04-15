@@ -82,7 +82,7 @@ export function Balances({ isConnected }) {
 					<CheckBox tokenList={y} />
 				</>
 			) : (
-				<Text>Connect wallet to show balances</Text>
+				<Text>Connect wallet to show Token Balances</Text>
 			)}
 		</>
 	);
