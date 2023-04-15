@@ -2,15 +2,10 @@
 pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-import "@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol";
-import "@uniswap/v3-core/contracts/interfaces/IUniswapV3Factory.sol";
-
 contract MasterPool is OwnableUpgradeable, ReentrancyGuard {
-    using SafeERC20 for IERC20;
 
     address public deployer;
 
@@ -26,11 +21,6 @@ contract MasterPool is OwnableUpgradeable, ReentrancyGuard {
     // Mapping from user address to token address to the deposit amount for that user and token.
     mapping(address => mapping(address => uint256)) public userDeposits;
 
-    //Uniswap v3 Factory Address
-    IUniswapV3Factory public uniswapV3Factory;
-    address public WMATIC;
-
-
     event Deposit(address indexed user, address indexed token, uint256 amount);
     event Withdrawal(address indexed user, address indexed token, uint256 amount);
 
@@ -42,7 +32,7 @@ contract MasterPool is OwnableUpgradeable, ReentrancyGuard {
 
     function deposit(address token, uint256 amount) public nonReentrant  returns (bool){
         require(amount > 0, "Amount must be above ZERO");
-        IERC20(token).safeTransferFrom(msg.sender, address(this), amount);
+        IERC20(token).transferFrom(msg.sender, address(this), amount);
 
         totalDeposits[token] += amount;
         userDeposits[msg.sender][token] += amount;
@@ -61,7 +51,7 @@ contract MasterPool is OwnableUpgradeable, ReentrancyGuard {
     function withdraw(address token, uint256 amount) public nonReentrant returns (bool){
         require(amount <= userDeposits[msg.sender][token], "Withdrawal amount exceed your balance");
 
-        IERC20(token).safeTransfer(msg.sender, amount);
+        IERC20(token).transfer(msg.sender, amount);
         totalDeposits[token] -= amount;
         userDeposits[msg.sender][token] -= amount;
 
