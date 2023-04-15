@@ -15,7 +15,7 @@ contract PoolFactory is OwnableUpgradeable {
     //Manage Pool Addresses.
     address[] public pools;
 
-    //Map token address to pool addres.
+    //Map token address to pool address.
     mapping (address => address) public tokenToPool;
 
     //See if the pool for specified token address is enabled.
@@ -31,23 +31,24 @@ contract PoolFactory is OwnableUpgradeable {
     }
 
     //Create token pool with this function.
-    function createPool(address token) public{
-    require(!isPoolCreated[token], "Token pool already exists");
+    function createPool(address token) public onlyOwner {
+        require(!isPoolCreated[token], "Token pool already exists");
 
-    address proxy = address(instance).clone();
+        address proxy = address(instance).clone();
 
-    //Pass the factory address upon initialization of the pool contract.
-    Pool(proxy).initialize(token, address(this));
+        //Pass the factory address and deployer address upon initialization of the pool contract.
+        Pool(proxy).initialize(token, address(this), msg.sender);
 
-    pools.push(proxy);
-    isPoolCreated[token] = true;
-    tokenToPool[token] = proxy;
+        pools.push(proxy);
+        isPoolCreated[token] = true;
+        tokenToPool[token] = proxy;
 
-    emit PoolCreated(token, proxy);
-}
+        emit PoolCreated(token, proxy);
+    }
 
-    //Get the list of allpools created.
+    //Get the list of all pools created.
     function getPools() public view returns (address[] memory) {
         return pools;
     }
+
 }
