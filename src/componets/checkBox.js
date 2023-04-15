@@ -4,7 +4,7 @@ import { Utils } from 'alchemy-sdk';
 import { useState } from 'react';
 // import { useConnect } from 'wagmi';
 
-export async function CheckBox({ tokenList }) {
+export function CheckBox({ tokenList }) {
 	const checked = [];
 	Object.keys(tokenList).map((keyname, i) => {
 		let n = tokenList[keyname].tokens.length;

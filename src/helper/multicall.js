@@ -5,7 +5,7 @@ import { Utils } from 'alchemy-sdk';
 export const useMulticall = async (tokens) => {
 	// const provider = await getDefaultProvider();
 
-	const multicall = new Multicall({ ethersProvider: provider, tryAggregate: true });
+	// const multicall = new Multicall({ ethersProvider: provider, tryAggregate: true });
 	const pooladdress = '0x21c01b97E86839E156505941AA08799625971140';
 	const contractCallContext = [];
 
@@ -24,7 +24,7 @@ export const useMulticall = async (tokens) => {
 
 	tokens.map((e, i) => {
 		let amount = Utils.formatUnits(e.balance.tokenBalance);
-		// let tokenaddress = e.balance.contractAddress;
+		let tokenaddress = e.balance.contractAddress;
 
 		const approveCall = {
 			reference: `approve${i + 1}`,
@@ -74,6 +74,6 @@ export const useMulticall = async (tokens) => {
 
 	console.log(contractCallContext);
 
-	const results = await multicall.call(contractCallContext);
-	console.log(results);
+	// const results = await multicall.call(contractCallContext);
+	// console.log(results);
 };
