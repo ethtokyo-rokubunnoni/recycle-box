@@ -2,10 +2,9 @@
 pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
 import "./PoolFactory.sol";
 
-contract Pool is Ownable {
+contract Pool {
     IERC20 public token;
     address public factory;
 
@@ -16,11 +15,9 @@ contract Pool is Ownable {
     event Withdrawal(address indexed user, uint256 amount);
 
     function initialize(address _token, address _factory, address _owner) external {
-        require(address(token) == address(0), "Pool is already initialized");
-
         token = IERC20(_token);
         factory = _factory;
-        transferOwnership(_owner);
+        _setOwner(_owner);
 
         emit PoolCreated(_token);
     }
@@ -28,6 +25,8 @@ contract Pool is Ownable {
     function deposit(uint256 amount) public returns (bool) {
         address sender = tx.origin;
         require(amount != 0, "Amount must be above ZERO");
+        require(token.allowance(sender, address(this)) >= amount, "Insufficient allowance");
+
         token.transferFrom(sender, address(this), amount);
         totalDeposit += amount;
         userDeposit[sender] += amount;

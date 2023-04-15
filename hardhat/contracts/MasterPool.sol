@@ -6,6 +6,9 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
+import "@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol";
+import "@uniswap/v3-core/contracts/interfaces/IUniswapV3Factory.sol";
+
 contract MasterPool is OwnableUpgradeable, ReentrancyGuard {
     using SafeERC20 for IERC20;
 
@@ -22,6 +25,11 @@ contract MasterPool is OwnableUpgradeable, ReentrancyGuard {
 
     // Mapping from user address to token address to the deposit amount for that user and token.
     mapping(address => mapping(address => uint256)) public userDeposits;
+
+    //Uniswap v3 Factory Address
+    IUniswapV3Factory public uniswapV3Factory;
+    address public WMATIC;
+
 
     event Deposit(address indexed user, address indexed token, uint256 amount);
     event Withdrawal(address indexed user, address indexed token, uint256 amount);
