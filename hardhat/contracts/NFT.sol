@@ -7,25 +7,22 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply.sol";
 
-
-contract NFT is ERC1155, Ownable, ERC1155Burnable, ERC1155Supply {
+contract NFT is ERC1155, Ownable, ERC1155Burnable, ERC1155Supply{
     using Strings for uint256;
 
-    uint256 public constant COLLECTION_COUNT = 5;
+    uint256 public constant COLLECTION_COUNT = 12;
     string public baseMetadataURIPrefix;
     string public baseMetadataURISuffix;
 
     // collection ID 
-    uint256 public constant V0 = 0;
-    uint256 public constant V1 = 1;
-    uint256 public constant V2 = 2;
-    uint256 public constant V3 = 3;
-    uint256 public constant V4 = 4;
+    uint256[] public collectionIds = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+    uint256[] private _allTokens;
+    mapping(uint256 => uint256) private _allTokensIndex;
 
     //metadata updates
     //To refresh token metadata on OpenSea, you can emit on-chain events as defined in EIP-4906:
     event MetadataUpdate(uint256 _tokenId);
-
+    
     constructor() ERC1155("") {
         baseMetadataURIPrefix = "https://bafybeietrg6tfezrjg3ytswumcesyli7ymx6w4dsqihdrvsu2on7k5rdem.ipfs.nftstorage.link/"; // ipfs base url, need to create ipfs before deploying
         baseMetadataURISuffix = ".json"; //".json", same as above
@@ -53,6 +50,16 @@ contract NFT is ERC1155, Ownable, ERC1155Burnable, ERC1155Supply {
     function mintRandom(address to) external {
         uint256 collectionId = _randomId();
         _mint(to, collectionId, 1, "");
+        _addTokenToAllTokensEnumeration(collectionId);
+    }
+
+    function totalSupply() public view returns (uint256){
+        return _allTokens.length;
+    }
+
+    function tokenByIndex(uint256 index) public view returns (uint256) {
+        require(index < totalSupply(), "Index out of bounds");
+        return _allTokens[index];
     }
 
     function _randomId() internal view returns (uint256) {
@@ -68,5 +75,9 @@ contract NFT is ERC1155, Ownable, ERC1155Burnable, ERC1155Supply {
     {
         super._beforeTokenTransfer(operator, from, to, ids, amounts, data);
     }
-}
 
+    function _addTokenToAllTokensEnumeration(uint256 tokenId) private {
+        _allTokensIndex[tokenId] = _allTokens.length;
+        _allTokens.push(tokenId);
+    }
+}
