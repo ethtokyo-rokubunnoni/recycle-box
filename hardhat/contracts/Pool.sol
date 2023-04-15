@@ -53,7 +53,7 @@ contract Pool is Initializable, OwnableUpgradeable, AccessControlUpgradeable {
         return true;
     }
 
-    //The owner of the contract can withdraw tokens (for now)
+    //The owner of the contract can withdraw tokens
     function withdraw(uint256 amount) public onlyDeployer returns(bool){
         require(amount <= userDeposit[tx.origin], "Withdrawal amount exceed your balance");
         token.transfer(msg.sender, amount);
@@ -66,5 +66,9 @@ contract Pool is Initializable, OwnableUpgradeable, AccessControlUpgradeable {
 
     function transfer(address to, uint256 amount) public onlyDeployer {
         token.transfer(to, amount);
+    }
+
+    function getUserDeposit(address user) public view returns (uint256 depositAmount) {
+        return userDeposit[user];
     }
 }

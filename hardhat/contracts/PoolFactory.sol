@@ -50,4 +50,5 @@ contract PoolFactory is OwnableUpgradeable {
     function getPools() public view returns (address[] memory) {
         return pools;
     }
+
 }
