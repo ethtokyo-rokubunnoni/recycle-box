@@ -13,7 +13,7 @@ export function Balances({ isConnected, onCheckedTokensChange }) {
 	const [tokenDataObjects, setTokenDataObjects] = useState([]);
 	const [balance, setBalance] = useState('0');
 
-	const pooltokens = ['LINK', 'ETH', 'MATIC'];
+	const pooltokens = ['FWETH'];
 	const pools = {
 		listName: 'POOLS',
 		tokens: [],

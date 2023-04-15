@@ -6,7 +6,6 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 contract MasterPool is OwnableUpgradeable, ReentrancyGuard {
-
     address public deployer;
     address[] public depositedTokens;
 
@@ -17,17 +16,28 @@ contract MasterPool is OwnableUpgradeable, ReentrancyGuard {
     // Mapping from user address to token address to the deposit amount for that user and token.
     mapping(address => mapping(address => uint256)) public userDeposits;
 
-    event DepositComplete(address indexed user, address indexed token, uint256 amount);
-    event Withdrawal(address indexed user, address indexed token, uint256 amount);
-    event Initialized (address deployer);
+    event DepositComplete(
+        address indexed user,
+        address indexed token,
+        uint256 amount
+    );
+    event Withdrawal(
+        address indexed user,
+        address indexed token,
+        uint256 amount
+    );
+    event Initialized(address deployer);
 
     function initialize(address _deployer) public initializer {
         __Ownable_init();
         deployer = _deployer;
-        emit initialized (_deployer);
+        emit Initialized(_deployer);
     }
 
-    function deposit(address token, uint256 amount) public nonReentrant  returns (bool){
+    function deposit(
+        address token,
+        uint256 amount
+    ) public nonReentrant returns (bool) {
         require(amount > 0, "Amount must be above ZERO");
         IERC20(token).transferFrom(msg.sender, address(this), amount);
 
@@ -45,8 +55,14 @@ contract MasterPool is OwnableUpgradeable, ReentrancyGuard {
     }
 
     //Withdrawal function.
-    function withdraw(address token, uint256 amount) public nonReentrant returns (bool){
-        require(amount <= userDeposits[msg.sender][token], "Withdrawal amount exceed your balance");
+    function withdraw(
+        address token,
+        uint256 amount
+    ) public nonReentrant returns (bool) {
+        require(
+            amount <= userDeposits[msg.sender][token],
+            "Withdrawal amount exceed your balance"
+        );
 
         IERC20(token).transfer(msg.sender, amount);
         totalDeposits[token] -= amount;
@@ -57,27 +73,32 @@ contract MasterPool is OwnableUpgradeable, ReentrancyGuard {
     }
 
     // View function to return user deposits for all tokens.
-    function getDeposits(address user) external view returns (address[] memory tokens, uint256[] memory depositAmounts) {
-    uint256 nonZeroDepositsCount = 0;
+    function getDeposits(
+        address user
+    )
+        external
+        view
+        returns (address[] memory tokens, uint256[] memory depositAmounts)
+    {
+        uint256 nonZeroDepositsCount = 0;
 
-    for (uint256 i = 0; i < depositedTokens.length; i++) {
-        if (userDeposits[user][depositedTokens[i]] > 0) {
-            nonZeroDepositsCount++;
+        for (uint256 i = 0; i < depositedTokens.length; i++) {
+            if (userDeposits[user][depositedTokens[i]] > 0) {
+                nonZeroDepositsCount++;
+            }
+        }
+
+        tokens = new address[](nonZeroDepositsCount);
+        depositAmounts = new uint256[](nonZeroDepositsCount);
+        uint256 index = 0;
+
+        for (uint256 i = 0; i < depositedTokens.length; i++) {
+            uint256 depositAmount = userDeposits[user][depositedTokens[i]];
+            if (depositAmount > 0) {
+                tokens[index] = depositedTokens[i];
+                depositAmounts[index] = depositAmount;
+                index++;
+            }
         }
     }
-
-    tokens = new address[](nonZeroDepositsCount);
-    depositAmounts = new uint256[](nonZeroDepositsCount);
-    uint256 index = 0;
-
-    for (uint256 i = 0; i < depositedTokens.length; i++) {
-        uint256 depositAmount = userDeposits[user][depositedTokens[i]];
-        if (depositAmount > 0) {
-            tokens[index] = depositedTokens[i];
-            depositAmounts[index] = depositAmount;
-            index++;
-        }
-    }
-}
-
 }
