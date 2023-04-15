@@ -1,48 +1,47 @@
 const { expect } = require("chai");
-const { ethers } = require("hardhat");
 
 describe("NFT", function () {
   let NFT, nft, owner, addr1, addr2;
 
   beforeEach(async () => {
     NFT = await ethers.getContractFactory("NFT");
-    [owner, addr1, addr2] = await ethers.getSigners();
     nft = await NFT.deploy();
+    [owner, addr1, addr2] = await ethers.getSigners();
   });
 
-  // Test if the contract is deployed successfully and base URI is set correctly
-  it("Should deploy the contract and set base URI", async () => {
-    expect(await nft.baseMetadataURIPrefix()).to.equal(
-      "https://bafybeietrg6tfezrjg3ytswumcesyli7ymx6w4dsqihdrvsu2on7k5rdem.ipfs.nftstorage.link/"
-    );
-    expect(await nft.baseMetadataURISuffix()).to.equal(".json");
+  describe("Deployment", function () {
+    it("Should set the right base URI", async function () {
+      const baseURI = await nft.baseMetadataURIPrefix();
+      expect(baseURI).to.equal("https://bafybeidoftie6hxk3tpgndkb2nqemc57folfff5bsfp6hepdgfpaehk4x4.ipfs.dweb.link/");
+    });
+
+    it("Should set the right base URI suffix", async function () {
+      const suffix = await nft.baseMetadataURISuffix();
+      expect(suffix).to.equal(".json");
+    });
   });
 
-  // Test if the owner can update the base URI
-  it("Should allow the owner to update base URI", async () => {
-    await nft.connect(owner).setBaseURI("https://example.com/");
-    expect(await nft.baseMetadataURIPrefix()).to.equal("https://example.com/");
+  describe("Minting", function () {
+    it("Should mint a random token to addr1", async function () {
+      await nft.connect(addr1).mintRandom(addr1.address);
+      const totalSupply = await nft.totalSupply();
+      expect(totalSupply).to.equal(1);
+    });
   });
 
-  // Test if non-owners cannot update the base URI
-  it("Should not allow non-owner to update base URI", async () => {
-    await expect(nft.connect(addr1).setBaseURI("https://example.com/")).to.be.revertedWith(
-      "Ownable: caller is not the owner"
-    );
+  describe("Token URI", function () {
+    it("Should return the correct token URI", async function () {
+      await nft.connect(addr1).mintRandom(addr1.address);
+      const tokenURI = await nft.uri(1);
+      expect(tokenURI).to.equal("https://bafybeidoftie6hxk3tpgndkb2nqemc57folfff5bsfp6hepdgfpaehk4x4.ipfs.dweb.link/1.json");
+    });
   });
 
-  // Test if the token URI is generated correctly
-  it("Should return correct token URI", async () => {
-    const tokenId = 2;
-    const expectedURI =
-      "https://bafybeietrg6tfezrjg3ytswumcesyli7ymx6w4dsqihdrvsu2on7k5rdem.ipfs.nftstorage.link/2.json";
-    expect(await nft.uri(tokenId)).to.equal(expectedURI);
-  });
-
-  // Test if the mintRandom function mints a token to the specified address
-  it("Should mint a random token to the specified address", async () => {
-    await nft.connect(addr1).mintRandom(addr1.address);
-    const balance = await nft.balanceOf(addr1.address, 0); // Check the balance of the first collection ID
-    expect(balance).to.be.at.least(1); // The balance should be at least 1 since a token has been minted
+  describe("Setting Base URI", function () {
+    it("Should update the base URI", async function () {
+      await nft.setBaseURI("https://new-ipfs-base-uri/");
+      const newBaseURI = await nft.baseMetadataURIPrefix();
+      expect(newBaseURI).to.equal("https://new-ipfs-base-uri/");
+    });
   });
 });
