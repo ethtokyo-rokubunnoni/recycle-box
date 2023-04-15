@@ -7,14 +7,14 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply.sol";
 
-contract NFT is ERC1155, Ownable, ERC1155Burnable, ERC1155Supply{
+contract NFT is ERC1155, Ownable, ERC1155Burnable, ERC1155Supply {
     using Strings for uint256;
 
     uint256 public constant COLLECTION_COUNT = 12;
     string public baseMetadataURIPrefix;
     string public baseMetadataURISuffix;
 
-    // collection ID 
+    // collection ID
     uint256[] public collectionIds = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
     uint256[] private _allTokens;
     mapping(uint256 => uint256) private _allTokensIndex;
@@ -22,7 +22,7 @@ contract NFT is ERC1155, Ownable, ERC1155Burnable, ERC1155Supply{
     //metadata updates
     //To refresh token metadata on OpenSea, you can emit on-chain events as defined in EIP-4906:
     event MetadataUpdate(uint256 _tokenId);
-    
+
     constructor() ERC1155("") {
         baseMetadataURIPrefix = "https://bafybeietrg6tfezrjg3ytswumcesyli7ymx6w4dsqihdrvsu2on7k5rdem.ipfs.nftstorage.link/"; // ipfs base url, need to create ipfs before deploying
         baseMetadataURISuffix = ".json"; //".json", same as above
@@ -35,25 +35,26 @@ contract NFT is ERC1155, Ownable, ERC1155Burnable, ERC1155Supply{
     }
 
     //for OpenSea
-        function uri(uint _tokenId) override public view returns (string memory){
-        return string(
-            abi.encodePacked(
-                baseMetadataURIPrefix,
-                Strings.toString(_tokenId),
-                baseMetadataURISuffix
-            )
-        );
+    function uri(uint _tokenId) public view override returns (string memory) {
+        return
+            string(
+                abi.encodePacked(
+                    baseMetadataURIPrefix,
+                    Strings.toString(_tokenId),
+                    baseMetadataURISuffix
+                )
+            );
     }
 
     //Randomly assign collection ID
     // ***** need to restrict address ******, only factory modifier or something
     function mintRandom(address to) external {
-        uint256 collectionId = _randomId();
+        uint256 collectionId = _rank();
         _mint(to, collectionId, 1, "");
         _addTokenToAllTokensEnumeration(collectionId);
     }
 
-    function totalSupply() public view returns (uint256){
+    function totalSupply() public view returns (uint256) {
         return _allTokens.length;
     }
 
@@ -62,17 +63,46 @@ contract NFT is ERC1155, Ownable, ERC1155Burnable, ERC1155Supply{
         return _allTokens[index];
     }
 
-    function _randomId() internal view returns (uint256) {
-        uint256 randomness = uint256(keccak256(abi.encodePacked(block.timestamp, block.prevrandao, msg.sender)));
-        return randomness % COLLECTION_COUNT;
+    function _rank() internal view returns (uint256 _Rank) {
+        uint256 randomness = uint256(
+            keccak256(
+                abi.encodePacked(block.timestamp, block.prevrandao, msg.sender)
+            )
+        );
+        randomness = randomness % 10000;
+
+        uint16[12] memory rarity = [
+            6150,
+            4050,
+            2675,
+            1925,
+            1225,
+            875,
+            600,
+            350,
+            200,
+            75,
+            25,
+            0
+        ];
+
+        for (uint i = 0; i < rarity.length; i++) {
+            if (randomness > rarity[i]) {
+                return uint256(rarity.length - i);
+            }
+        }
     }
 
     // The following functions are overrides required by Solidity.
 
-    function _beforeTokenTransfer(address operator, address from, address to, uint256[] memory ids, uint256[] memory amounts, bytes memory data)
-        internal
-        override(ERC1155, ERC1155Supply)
-    {
+    function _beforeTokenTransfer(
+        address operator,
+        address from,
+        address to,
+        uint256[] memory ids,
+        uint256[] memory amounts,
+        bytes memory data
+    ) internal override(ERC1155, ERC1155Supply) {
         super._beforeTokenTransfer(operator, from, to, ids, amounts, data);
     }
 
