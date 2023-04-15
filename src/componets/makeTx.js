@@ -2,10 +2,11 @@ import { Utils } from 'alchemy-sdk';
 import { ethers } from 'ethers';
 import { Write } from './write';
 import { useState } from 'react';
+import { Button, Text } from '@chakra-ui/react';
+import { useAccount, useProvider } from 'wagmi';
 
-export const MakeTx = ({ tokens }) => {
+export const MakeTx = () => {
 	const pooladdress = '0x21c01b97E86839E156505941AA08799625971140';
-
 	const approveABI = {
 		name: 'approve',
 		type: 'function',
@@ -18,36 +19,30 @@ export const MakeTx = ({ tokens }) => {
 		payable: false,
 		stateMutability: 'nonpayable',
 	};
-
-	const [depositArgs, setDepositArgs] = useState([[], []]);
+	// const [depositArgs, setDepositArgs] = useState([[], []]);
 	let depositAmounts = [];
 	let depositTokens = [];
-
-	setDepositArgs([depositAmounts, depositTokens]);
-
-	console.log(depositArgs);
-
+	// setDepositArgs([depositAmounts, depositTokens]);
+	// console.log(depositArgs);
 	console.log([depositAmounts, depositTokens]);
-
-	return (
-		<>
-			{tokens.map((e, i) => {
-				let _amount = Utils.formatUnits(e.balance.tokenBalance);
-				let amount = ethers.utils.parseEther(_amount);
-				let tokenaddress = e.balance.contractAddress;
-				depositAmounts.push(amount);
-				depositTokens.push(tokenaddress);
-				let tx = {
-					address: tokenaddress,
-					abi: [approveABI],
-					method: 'approve',
-					args: [pooladdress, amount],
-				};
-				return <Write tx={tx} />;
-			})}
-		</>
-	);
-
+	// return (
+	// 	<>
+	// 		{tokens.map((e, i) => {
+	// 			let _amount = Utils.formatUnits(e.balance.tokenBalance);
+	// 			let amount = ethers.utils.parseEther(_amount);
+	// 			let tokenaddress = e.balance.contractAddress;
+	// 			depositAmounts.push(amount);
+	// 			depositTokens.push(tokenaddress);
+	// 			let tx = {
+	// 				address: tokenaddress,
+	// 				abi: [approveABI],
+	// 				method: 'approve',
+	// 				args: [pooladdress, amount],
+	// 			};
+	// 			return <Write tx={tx} />;
+	// 		})}
+	// 	</>
+	// );
 	// const depositABI = {
 	// 	inputs: [
 	// 		{
@@ -61,7 +56,6 @@ export const MakeTx = ({ tokens }) => {
 	// 	stateMutability: 'nonpayable',
 	// 	type: 'function',
 	// };
-
 	// tokens.map((e, i) => {
 	// 	let amount = Utils.formatUnits(e.balance.tokenBalance);
 	// 	const depositCall = {
@@ -75,12 +69,15 @@ export const MakeTx = ({ tokens }) => {
 	// 		abi: [depositABI],
 	// 		calls: [depositCall],
 	// 	};
-
 	// 	contractCallContext.push(tx);
 	// });
-
 	// console.log(contractCallContext);
-
 	// const results = await multicall.call(contractCallContext);
 	// console.log(results);
+	return (
+		<>
+			<Text>WIP</Text>
+			{/* <Button onClick={() => checkAllowance()}>Check Allowance</Button> */}
+		</>
+	);
 };

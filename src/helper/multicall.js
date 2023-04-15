@@ -1,41 +1,47 @@
-import { Multicall } from 'ethereum-multicall';
 import { Utils } from 'alchemy-sdk';
-// import getDefaultProvider from 'ethers';
 
-export const multicall = (tokens) => {
-	// const provider = await getDefaultProvider();
-
-	// const multicall = new Multicall({ ethersProvider: provider, tryAggregate: true });
+export const multicall = (tokens, address) => {
 	const pooladdress = '0x21c01b97E86839E156505941AA08799625971140';
 	const contractCallContext = [];
 
-	const approveABI = {
-		name: 'approve',
-		type: 'function',
+	const allowanceABI = {
+		constant: true,
 		inputs: [
-			{ name: '_spender', type: 'address' },
-			{ name: '_value', type: 'uint256' },
+			{
+				name: '_owner',
+				type: 'address',
+			},
+			{
+				name: '_spender',
+				type: 'address',
+			},
 		],
-		outputs: [{ name: '', type: 'bool' }],
-		constant: false,
+		name: 'allowance',
+		outputs: [
+			{
+				name: '',
+				type: 'uint256',
+			},
+		],
 		payable: false,
-		stateMutability: 'nonpayable',
+		stateMutability: 'view',
+		type: 'function',
 	};
 
 	tokens.map((e, i) => {
 		let amount = Utils.formatUnits(e.balance.tokenBalance);
 		let tokenaddress = e.balance.contractAddress;
 
-		const approveCall = {
-			reference: `approve${i + 1}`,
-			methodName: 'approve',
-			methodParameters: [pooladdress, +amount],
+		const allowanceABICall = {
+			reference: `allowance`,
+			methodName: 'allowance',
+			methodParameters: [address, pooladdress],
 		};
 		let tx = {
-			reference: `approve${i + 1}`,
+			reference: `allowance${i}`,
 			contractAddress: tokenaddress,
-			abi: [approveABI],
-			calls: [approveCall],
+			abi: [allowanceABI],
+			calls: [allowanceABICall],
 		};
 
 		contractCallContext.push(tx);
@@ -55,25 +61,5 @@ export const multicall = (tokens) => {
 		type: 'function',
 	};
 
-	tokens.map((e, i) => {
-		let amount = Utils.formatUnits(e.balance.tokenBalance);
-		const depositCall = {
-			reference: `deposit${i + 1}`,
-			methodName: 'deposit',
-			methodParameters: [+amount],
-		};
-		let tx = {
-			reference: `deposit${i + 1}`,
-			contractAddress: pooladdress,
-			abi: [depositABI],
-			calls: [depositCall],
-		};
-
-		contractCallContext.push(tx);
-	});
-
-	console.log(contractCallContext);
-
-	// const results = await multicall.call(contractCallContext);
-	// console.log(results);
+	return contractCallContext;
 };
