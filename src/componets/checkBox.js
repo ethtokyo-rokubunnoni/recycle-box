@@ -1,4 +1,4 @@
-import { Button, Checkbox, Stack } from '@chakra-ui/react';
+import { Button, Checkbox, Stack, Box } from '@chakra-ui/react';
 import { Utils } from 'alchemy-sdk';
 import { useState } from 'react';
 
@@ -70,8 +70,9 @@ export function CheckBox({ tokenList }) {
 						</>
 					);
 				})}
-
-			<Button onClick={() => recycle()}>Recycle</Button>
+			<Box mt={6}>
+				<Button onClick={() => recycle()}>Recycle</Button>
+			</Box>
 		</>
 	);
 }

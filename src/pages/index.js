@@ -1,13 +1,11 @@
 import Head from 'next/head';
-import React from 'react';
+import React, { useState, useEffect }  from 'react';
 import {
 	Flex,
 	Box,
-	Grid,
 	Stack,
 	Heading,
 	Image,
-	useColorModeValue,
 	useMediaQuery,
 } from '@chakra-ui/react';
 import { useAccount } from 'wagmi';
@@ -16,6 +14,15 @@ import { Balances } from '@/componets/balance';
 
 export default function Home() {
 	const { isConnected } = useAccount();
+	const [headerText, setHeaderText] = useState("Clean out your wallet!");
+
+	useEffect(() => {
+		if (isConnected) {
+			setHeaderText("Oops!! You have many small amount of tokens!!");
+		} else {
+			setHeaderText("Clean out your wallet!");
+		}
+	}, [isConnected]);
 
 	const [isLargerThan480] = useMediaQuery('(max-width: 481px)');
 	const [isLargerThan768] = useMediaQuery('(min-width: 769px)');
@@ -40,7 +47,7 @@ export default function Home() {
 				<Box textAlign="center" maxW="xl" mt="10%">
 				<Stack spacing={6} align="center">
 					<Image src="/assets/mottainai.png" alt="Logo" boxSize={imageSize} mb="-6" />
-					<Heading fontSize="4xl">Clean out your wallet!</Heading>
+					<Heading fontSize="4xl">{headerText}</Heading>
 					<Box fontSize="lg" mt="4">
 						<Balances isConnected={isConnected} />
 					</Box>
