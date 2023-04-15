@@ -46,7 +46,7 @@ export default function Home() {
 			>
 				<Box textAlign="center" maxW="xl" mt="10%">
 				<Stack spacing={6} align="center">
-					<Image src="/assets/mottainai.png" alt="Logo" boxSize={imageSize} mb="-6" />
+					<Image src="/assets/mottainai-nft.png" alt="Logo" boxSize={imageSize} mb="-4.5" />
 					<Heading fontSize="4xl">{headerText}</Heading>
 					<Box fontSize="lg" mt="4">
 						<Balances isConnected={isConnected} />
