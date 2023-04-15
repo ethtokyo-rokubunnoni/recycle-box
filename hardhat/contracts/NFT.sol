@@ -24,7 +24,7 @@ contract NFT is ERC1155, Ownable, ERC1155Burnable, ERC1155Supply{
     event MetadataUpdate(uint256 _tokenId);
     
     constructor() ERC1155("") {
-        baseMetadataURIPrefix = "https://bafybeietrg6tfezrjg3ytswumcesyli7ymx6w4dsqihdrvsu2on7k5rdem.ipfs.nftstorage.link/"; // ipfs base url, need to create ipfs before deploying
+        baseMetadataURIPrefix = "https://bafybeidoftie6hxk3tpgndkb2nqemc57folfff5bsfp6hepdgfpaehk4x4.ipfs.dweb.link/"; // ipfs base url, need to create ipfs before deploying
         baseMetadataURISuffix = ".json"; //".json", same as above
     }
 

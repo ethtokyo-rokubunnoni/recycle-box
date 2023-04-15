@@ -31,7 +31,7 @@ contract PoolFactory is OwnableUpgradeable {
     }
 
     //Create token pool with this function.
-    function createPool(address token) public onlyOwner {
+    function createPool(address token) public{
         require(!isPoolCreated[token], "Token pool already exists");
 
         address proxy = address(instance).clone();
