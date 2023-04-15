@@ -4,15 +4,16 @@ import { useState } from 'react';
 import { Alchemy, Network, Utils } from 'alchemy-sdk';
 import { API_KEY } from '@/data/constants';
 import { CheckBox } from './checkBox';
+import { useEffect } from 'react';
 
-export function Balances() {
-	const { address, isConnected } = useAccount();
+export function Balances({isConnected}) {
+	const { address } = useAccount();
 	const [results, setResults] = useState([]);
 	const [hasQueried, setHasQueried] = useState(false);
 	const [tokenDataObjects, setTokenDataObjects] = useState([]);
 	const [balance, setBalance] = useState('0');
 
-	const pooltokens = ['LINK'];
+	const pooltokens = ['LINK','ETH','MATIC'];
 	const pools = {
 		listName: 'POOLS',
 		tokens: [],
@@ -59,15 +60,22 @@ export function Balances() {
 		setHasQueried(true);
 	};
 
-	if (!isConnected) {
-		return <Text>Connect wallet to show balances</Text>;
-	}
-	let y;
+	useEffect(async () => {
+		if (isConnected) {
+			// <Text>Connect wallet to show balances</Text>;
+			await showBalances();
+		} else {
+			setHasQueried(false);
+		}
+	}, [isConnected]);
+	
 	return (
 		<>
-			{hasQueried ? (
+			{isConnected ? (
 				<>
-					<Text>Balance : {balance} ETH</Text>
+					<Text fontSize="24px" fontWeight="bold">
+						Balance : {balance} MATIC
+					</Text>
 					<SimpleGrid columns={4} spacing={24}>
 						{results.tokenBalances.map((e, i) => {
 							let x = { data: tokenDataObjects[i], balance: e };
@@ -96,9 +104,7 @@ export function Balances() {
 					<CheckBox tokenList={y} />
 				</>
 			) : (
-				<>
-					<Button onClick={showBalances}>Show balances</Button>
-				</>
+				<Text>Connect wallet to show balances</Text>
 			)}
 		</>
 	);

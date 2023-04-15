@@ -13,9 +13,9 @@
 		"@chakra-ui/react": "^2.5.5",
 		"@emotion/react": "^11.10.6",
 		"@emotion/styled": "^11.10.6",
-		"alchemy-sdk": "^2.8.0",
 		"@openzeppelin/contracts": "^4.8.3",
 		"@openzeppelin/contracts-upgradeable": "^4.8.3",
+		"alchemy-sdk": "^2.8.0",
 		"eslint": "8.38.0",
 		"eslint-config-next": "13.3.0",
 		"framer-motion": "^10.11.6",
@@ -30,7 +30,7 @@
 		"@ethersproject/providers": "^5.4.7",
 		"@nomicfoundation/hardhat-chai-matchers": "^1.0.0",
 		"@nomicfoundation/hardhat-network-helpers": "^1.0.0",
-		"@nomicfoundation/hardhat-toolbox": "^2.0.0",
+		"@nomicfoundation/hardhat-toolbox": "^1.0.2",
 		"@nomiclabs/hardhat-ethers": "^2.0.0",
 		"@nomiclabs/hardhat-etherscan": "^3.0.0",
 		"@typechain/ethers-v5": "^10.1.0",
@@ -39,7 +39,7 @@
 		"ethers": "^5",
 		"hardhat": "^2.13.1",
 		"hardhat-gas-reporter": "^1.0.8",
-		"solidity-coverage": "^0.8.0",
+		"solidity-coverage": "^0.7.22",
 		"typechain": "^8.1.0"
 	}
 }

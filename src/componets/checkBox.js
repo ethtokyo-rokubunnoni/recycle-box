@@ -4,33 +4,36 @@ import { useState } from 'react';
 
 export function CheckBox({ tokenList }) {
 	const checked = [];
-	Object.keys(tokenList).map((keyname, i) => {
-		let n = tokenList[keyname].tokens.length;
-		checked.push(new Array(n).fill(false));
-	});
+	if(tokenList){
+		Object.keys(tokenList).map((keyname, i) => {
+			let n = tokenList[keyname].tokens.length;
+			checked.push(new Array(n).fill(false));
+		});
+	}
 
 	let recycleTokens = [];
 
 	const recycle = () => {
-		Object.keys(tokenList).map((keyname, i) => {
-			tokenList[keyname].tokens.map((e, j) => {
-				if (checked[i][j]) {
-					recycleTokens.push(e);
-				}
+		if (tokenList) {
+			Object.keys(tokenList).map((keyname, i) => {
+				tokenList[keyname].tokens.map((e, j) => {
+					if (checked[i][j]) {
+						recycleTokens.push(e);
+					}
+				});
 			});
-		});
-		console.log(recycleTokens);
+			console.log(recycleTokens);
+		}
 	};
 
 	return (
 		<>
-			{Object.keys(tokenList).map((keyname, i) => {
+			{tokenList && Object.keys(tokenList).map((keyname, i) => {
 				let n = tokenList[keyname].tokens.length;
 				const [checkedItems, setCheckedItems] = useState(new Array(n).fill(false));
 				const allChecked = checkedItems.every(Boolean);
 				const isIndeterminate = checkedItems.some(Boolean) && !allChecked;
 				checked[i] = checkedItems;
-
 				return (
 					<>
 						<Checkbox

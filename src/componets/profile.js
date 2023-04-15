@@ -8,12 +8,13 @@ import {
   MenuList,
 } from '@chakra-ui/react';
 import { useAccount, useConnect, useDisconnect, useEnsName } from 'wagmi';
+import { useEffect } from 'react';
 
 function truncateAddress(address, startLength = 6, endLength = 4) {
   return `${address.slice(0, startLength)}...${address.slice(-endLength)}`;
 }
 
-export function Profile() {
+export function Profile({ setHasQueried }) {
   const { address, connector, isConnected } = useAccount();
   const { data: ensName } = useEnsName({ address });
   const { connect, connectors, error, isLoading, pendingConnector } = useConnect();
@@ -30,6 +31,13 @@ export function Profile() {
       connect({ connector: connectors[0] }); // Assuming MetaMask is the first connector in the list
     }
   };
+
+  useEffect(() => {
+    if (!isConnected && setHasQueried) {
+    // Reset the state in the Balances component
+    setHasQueried(false);
+    }
+  }, [isConnected, setHasQueried]);
 
   if (isConnected) {
     return (

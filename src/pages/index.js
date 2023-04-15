@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import React, { useReducer, useState } from 'react';
 import {
 	TitleBar,
 	UserInfo,
@@ -8,13 +9,25 @@ import {
 	Stack,
 	Heading,
 	Text,
+	Image,
 	useColorModeValue,
+	useMediaQuery
 } from '@chakra-ui/react';
 
 import { Profile } from '@/componets/profile';
 import { Balances } from '@/componets/balance';
 
 export default function Home() {
+	const [isLargerThan480] = useMediaQuery('(max-width: 481px)');
+	const [isLargerThan768] = useMediaQuery('(min-width: 769px)');
+	const imageSize = isLargerThan768
+		? '60%'
+		: isLargerThan480
+		? '40%'
+		: '20%';
+
+	const [hasQueried, setHasQueried] = useState(false);
+
 	return (
 		<>
 			<Head>
@@ -36,8 +49,11 @@ export default function Home() {
 						<Stack spacing={8} w={['90vh', 450, 550]} py={12} px={6} align={'center'}>
 							<Stack pt={50} align={'center'}>
 								<Heading fontSize={'4xl'}>Clean out your wallet!</Heading>
-								<Text fontSize={'lg'} color={useColorModeValue('gray.500', 'gray.600')}></Text>
-								<Balances />
+									<Image src='/assets/mottainai.png' alt='Logo' boxSize={imageSize} />
+								<Text fontSize={'lg'} color={useColorModeValue('gray.500', 'gray.600')}>
+									<Balances setHasQueried={setHasQueried} />
+									{/*{hasQueried && <Balances />}*/}
+								</Text>
 							</Stack>
 						</Stack>
 					</Grid>
