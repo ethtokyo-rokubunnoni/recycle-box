@@ -1,8 +1,8 @@
-import { Button, Checkbox, Stack, Box, Text, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Spinner } from '@chakra-ui/react';
+import { Button, Checkbox, Stack, Box, Text, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Spinner, CircularProgress, Image, } from '@chakra-ui/react';
 import { Utils } from 'alchemy-sdk';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-export function CheckBox({ tokenList }) {
+export function CheckBox({ tokenList, hideChecked, onModalActionCompleted, setHeaderText }) {
   const checked = [];
   if (tokenList) {
     Object.keys(tokenList).map((keyname, i) => {
@@ -27,10 +27,40 @@ export function CheckBox({ tokenList }) {
     setIsOpen(true);
   };
 
+  const [modalState, setModalState] = useState({
+    headerText: "Recycling Now",
+    spinner: true,
+    bodyText: "Wait for a second...",
+  });
+
+  const handleModalActionCompleted = () => {
+    setHeaderText("Recycling Completed");
+    onModalActionCompleted();
+  };
+
   const [isOpen, setIsOpen] = useState(false);
   const onClose = () => {
     setIsOpen(false);
   };
+
+  useEffect(() => {
+    let timer;
+    if (isOpen) {
+      timer = setTimeout(() => {
+        handleModalActionCompleted();
+        setModalState({
+          headerText: "Recycling Completed",
+          spinner: false,
+          bodyText: "Recycling has been completed!",
+          imageURL: "/assets/mottainai.png"
+        });
+      }, 2000); // 2sec finish
+    }
+
+    return () => {
+      clearTimeout(timer); // クリーンアップ関数でタイマーを解除
+    };
+  }, [isOpen]);
 
   return (
     <>
@@ -57,19 +87,21 @@ export function CheckBox({ tokenList }) {
                 {tokenList[keyname].tokens.map((e, j) => {
                   console.log(e);
                   return (
-                    <Checkbox
-                      key={e.symbol}
-                      isChecked={checkedItems[j]}
-                      onChange={(a) => {
-                        setCheckedItems((checkedItems) => {
-                          return checkedItems.map((item, k) => {
-                            return k === j ? a.target.checked : item;
+                    !hideChecked || !checkedItems[j] ? (
+                      <Checkbox
+                        key={e.symbol}
+                        isChecked={checkedItems[j]}
+                        onChange={(a) => {
+                          setCheckedItems((checkedItems) => {
+                            return checkedItems.map((item, k) => {
+                              return k === j ? a.target.checked : item;
+                            });
                           });
-                        });
-                      }}
-                    >
-                      {e.data.symbol} {Utils.formatUnits(e.balance.tokenBalance, e.data.decimals)}
-                    </Checkbox>
+                        }}
+                      >
+                        {e.data.symbol} {Utils.formatUnits(e.balance.tokenBalance, e.data.decimals)}
+                      </Checkbox>
+                    ) : null
                   );
                 })}
               </Stack>
@@ -82,20 +114,26 @@ export function CheckBox({ tokenList }) {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent position="absolute" top="200px">
-		  <Box align="center">
-          <ModalHeader>Recycling Now</ModalHeader>
-          <ModalCloseButton />
-		  <Spinner 
-			 thickness='4px'
-			 speed='0.65s'
-			 emptyColor='gray.200'
-			 color='blue.500'
-			 size='xl'
-			 />
-          <ModalBody>
-            <Text>Wait for a second... </Text>
-          </ModalBody>
-		  </Box>
+          <Box align="center">
+            <ModalHeader>{modalState.headerText}</ModalHeader>
+            <ModalCloseButton />
+            {modalState.spinner && (
+              <Spinner
+                thickness='4px'
+                speed='0.65s'
+                emptyColor='gray.200'
+                color='blue.500'
+                size='xl'
+              />
+            )}
+            {!modalState.spinner && (
+              <Image src={modalState.imageUrl} alt="image" boxSize="30%" mb="-6"  />
+            )}
+
+            <ModalBody>
+              <Text>{modalState.bodyText}</Text>
+            </ModalBody>
+          </Box>
           <ModalFooter>
             <Button colorScheme="blue" mr={3} onClick={onClose}>
               Close

@@ -6,7 +6,7 @@ import { API_KEY } from '@/data/constants';
 import { CheckBox } from './checkBox';
 import { useEffect } from 'react';
 
-export function Balances({ isConnected, onCheckedTokensChange }) {
+export function Balances({ isConnected, hideChecked, onCheckedTokensChange, setHeaderText }) {
 	const { address } = useAccount();
 	const [results, setResults] = useState([]);
 	const [hasQueried, setHasQueried] = useState(false);
@@ -22,6 +22,12 @@ export function Balances({ isConnected, onCheckedTokensChange }) {
 		listName: 'OTHERS',
 		tokens: [],
 	};
+
+	const onModalActionCompleted = () => {
+		onCheckedTokensChange();
+	};
+	  
+
 	const showBalances = async () => {
 		const config = {
 			apiKey: API_KEY,
@@ -63,13 +69,21 @@ export function Balances({ isConnected, onCheckedTokensChange }) {
 		}
 	}, [isConnected]);
 
+	useEffect(() => {
+		if (hideChecked) {
+		  onModalActionCompleted();
+		}
+	  }, [hideChecked]);
+
 	return (
 		<>
 			{hasQueried ? (
 				<>
+				  {!hideChecked && (
 					<Text fontSize='24px' fontWeight='bold' mb={4}>
 						Balance : {balance} MATIC
 					</Text>
+				  )}
 					{results.tokenBalances.map((e, i) => {
 						let x = { data: tokenDataObjects[i], balance: e };
 						if (pooltokens.includes(tokenDataObjects[i].symbol)) {
@@ -79,7 +93,15 @@ export function Balances({ isConnected, onCheckedTokensChange }) {
 						}
 						y = { pools, others };
 					})}
-					<CheckBox tokenList={y} onCheckedTokensChange={onCheckedTokensChange} />
+					<CheckBox
+						tokenList={y}
+						onCheckedTokensChange={onCheckedTokensChange}
+						hideChecked={hideChecked}
+						onModalActionCompleted={() => onModalActionCompleted(setHeaderText)}
+						setHeaderText={setHeaderText}
+					/>
+
+
 				</>
 			) : (
 				<Text>Connect wallet to show Token Balances</Text>
