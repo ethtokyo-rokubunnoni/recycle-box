@@ -6,7 +6,7 @@ import { API_KEY } from '@/data/constants';
 import { CheckBox } from './checkBox';
 import { useEffect } from 'react';
 
-export function Balances({ isConnected }) {
+export function Balances({ isConnected, onCheckedTokensChange }) {
 	const { address } = useAccount();
 	const [results, setResults] = useState([]);
 	const [hasQueried, setHasQueried] = useState(false);
@@ -67,7 +67,7 @@ export function Balances({ isConnected }) {
 		<>
 			{hasQueried ? (
 				<>
-					<Text fontSize='24px' fontWeight='bold'>
+					<Text fontSize='24px' fontWeight='bold' mb={4}>
 						Balance : {balance} MATIC
 					</Text>
 					{results.tokenBalances.map((e, i) => {
@@ -79,7 +79,7 @@ export function Balances({ isConnected }) {
 						}
 						y = { pools, others };
 					})}
-					<CheckBox tokenList={y} />
+					<CheckBox tokenList={y} onCheckedTokensChange={onCheckedTokensChange} />
 				</>
 			) : (
 				<Text>Connect wallet to show Token Balances</Text>

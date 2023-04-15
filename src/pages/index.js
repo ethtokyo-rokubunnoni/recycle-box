@@ -15,6 +15,15 @@ import { Balances } from '@/componets/balance';
 export default function Home() {
 	const { isConnected } = useAccount();
 	const [headerText, setHeaderText] = useState("Clean out your wallet!");
+	const onCheckedTokensChange = (checkedTokensCount) => {
+		if (isConnected && checkedTokensCount > 0) {
+		  setHeaderText(`${checkedTokensCount} tokens checked!`);
+		} else if (isConnected) {
+		  setHeaderText("Oops!! You have many small amount of tokens!!");
+		} else {
+		  setHeaderText("Clean out your wallet!");
+		}
+	};
 
 	useEffect(() => {
 		if (isConnected) {
