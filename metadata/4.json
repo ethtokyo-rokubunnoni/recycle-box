@@ -1,0 +1,29 @@
+{
+    "description": "Eco-NFT is a special type of NFT that all “Mottainai” service users can randomly receive one per transaction. There are various types, and in the current beta version, multiple versions with different background colors and designs exist. Eco-NFT serves as proof that users are committed to using their wallets responsibly and with care. In addition to its proof aspect, Eco-NFT can also be used as a ticket to participate in eco-themed events around the world. When using an Eco-NFT as a ticket, the NFT is burned instead of receiving SBT. Furthermore, you can combine different NFTs to create new ones, or exchange them for real-world eco-friendly merchandise. Try the Mottainai service to organize your wallet and enjoy collecting Eco-NFTs!",
+    "external_url": "",
+    "image": "https://bafybeif2kcueiwg3obu5h4rseffwq7rebxb5nwya5fknmkjlyw4lon2avu.ipfs.dweb.link/{id}.png",
+    "name": "Mottainai",
+    "attributes": [
+        {
+            "trait_type": "Back Ground Colour",
+            "value": "Dot"
+        },
+        {
+            "trait_type": "Eye",
+            "value": "ETH"
+        },
+        {
+            "trait_type": "Shape", 
+            "value": "Circle"
+        },
+        {
+            "trait_type": "Mouth", 
+            "value": "Smile with Tongue"
+        },
+        {
+            "display_type": "date",
+            "trait_type": "birthday", 
+            "value": 1681570800
+        }
+    ]
+}

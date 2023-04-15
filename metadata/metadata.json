@@ -1,0 +1,29 @@
+{
+    "description": "",
+    "external_url": "https://docs.opensea.io/docs/metadata-standards",
+    "image": "ipfs://~~/{id}.jpeg",
+    "name": "Mottainai",
+    "attributes": [
+        {
+            "trait_type": "Back Ground Colour",
+            "value": "Rainbow"
+        },
+        {
+            "trait_type": "Eye",
+            "value": "BTC"
+        },
+        {
+            "trait_type": "Shape", 
+            "value": "Circle"
+        },
+        {
+            "trait_type": "Mouth", 
+            "value": "Smile with Tongue"
+        },
+        {
+            "display_type": "date",
+            "trait_type": "birthday", 
+            "value": 20230415
+        }
+    ]
+}
